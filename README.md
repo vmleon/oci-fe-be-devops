@@ -2,6 +2,8 @@
 
 Deploy with Terraform and Ansible your frontend (React.js) and backend (Node.js) on OCI.
 
+![Screenshot](images/screenshot.png)
+
 ## Requirements
 
 - Oracle Cloud Infrastructure account
