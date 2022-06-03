@@ -1,3 +1,21 @@
+# terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfvars
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraform.lock.hcl
+crash.log
+crash.*.log
+.terraformrc
+terraform.rc
+
+# Generated
+generated
+
 # dependencies
 node_modules
 .pnp

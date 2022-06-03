@@ -1,0 +1,35 @@
+---
+- name: Install Node
+  dnf:
+    name: "@nodejs:16"
+    update_cache: yes
+- name: Copy server files
+  copy:
+    src: "../../../../../../src/backend/{{ item }}"
+    dest: /home/opc/backend/
+    owner: opc
+  with_items:
+  - "index.js"
+  - "package.json"
+  - "package-lock.json"
+- name: Install dependencies
+  command: npm install
+  become: true
+  become_user: opc
+  args:
+    chdir: /home/opc/backend/
+- name: Add firewall port
+  firewalld:
+    zone: public
+    port: 3000/tcp
+    permanent: yes
+    immediate: yes
+    state: enabled
+- name: Install pm2
+  command: npm install pm2 -g
+- name: Run Backend App
+  command: pm2 start index.js
+  become: true
+  become_user: opc
+  args:
+    chdir: /home/opc/backend/

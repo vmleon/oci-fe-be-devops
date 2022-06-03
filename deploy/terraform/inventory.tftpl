@@ -1,0 +1,13 @@
+[frontends]
+frontend1 ansible_host=${frontend_public_ip}
+
+[frontends:vars]
+ansible_user=opc
+ansible_private_key_file=~/.ssh/id_rsa
+
+[backends]
+backend1 ansible_host=${backend_public_ip}
+
+[backends:vars]
+ansible_user=opc
+ansible_private_key_file=~/.ssh/id_rsa
