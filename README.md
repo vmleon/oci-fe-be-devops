@@ -2,8 +2,6 @@
 
 Deploy with Terraform and Ansible your frontend (React.js) and backend (Node.js) on OCI.
 
-![Screenshot](images/screenshot.png)
-
 ## Requirements
 
 - Oracle Cloud Infrastructure account
@@ -12,30 +10,39 @@ Deploy with Terraform and Ansible your frontend (React.js) and backend (Node.js)
 ## TODO
 
 - LB Health Checks in warning
-- Ansible merge frontend and backend in one
 - Frontend and Backend on private subnets
 - Add Database
 
 ## Set Up
 
+Clone this repository in your local machine:
 ```
 git clone https://github.com/vmleon/oci-fe-be-devops.git
 ```
 
+Change directory to the `oci-fe-be-devops`:
 ```
 cd oci-fe-be-devops
 ```
 
+Export an environment variable with the base directory:
 ```
 export BASE_DIR=$(pwd)
 ```
 
 ## Build
 
+Build the frontend static content.
+
+Change directory to the frontend code:
 ```
 cd $BASE_DIR/src/frontend
 ```
 
+> NOTE: For next step, make sure you have a up-to-date version of Node.js
+> Use `node -v` to check it, is the version >= 14?
+
+Install dependencies:
 ```
 npm install
 ```
@@ -47,11 +54,11 @@ npm run build
 ## Deploy
 
 ```
-oci session authenticate
+cd $BASE_DIR/deploy/terraform
 ```
 
 ```
-cd $BASE_DIR/deploy/terraform
+oci session authenticate
 ```
 
 ```
@@ -64,20 +71,30 @@ vim terraform.tfvars
 ```
 
 ```
+terraform init
+```
+
+```
 terraform apply -auto-approve
 ```
 
 ```
-ansible-playbook -i generated/app.ini ../ansible/frontend/frontend.yaml
+ansible-playbook -i generated/app.ini ../ansible/site.yaml
 ```
 
-> If you are asked:
+> You will be asked a few times:
 > `Are you sure you want to continue connecting (yes/no/[fingerprint])?`
 > Type `yes` and `[ENTER]`.
 
+Print the load balancer IP from the terraform output again:
 ```
-ansible-playbook -i generated/app.ini ../ansible/backend/backend.yaml
+terraform output lb_public_ip
 ```
+
+Copy and paste the IP on your browser.
+
+You will see:
+![Screenshot](images/screenshot.png)
 
 ## Clean Up
 

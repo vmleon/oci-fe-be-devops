@@ -10,7 +10,7 @@
     enabled: yes
 - name: Copy static files
   copy:
-    src: ../../../../../../src/frontend/build/
+    src: ../../../../../src/frontend/build/
     dest: /usr/share/nginx/html/
   notify: restart nginx
 - name: Add firewall port

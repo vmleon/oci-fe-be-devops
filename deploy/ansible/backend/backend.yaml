@@ -1,6 +1,0 @@
----
-- name: Backend
-  hosts: backends
-  become: true
-  roles:
-    - backend
