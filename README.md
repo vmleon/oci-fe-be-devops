@@ -39,7 +39,7 @@ Change directory to the frontend code:
 cd $BASE_DIR/src/frontend
 ```
 
-> NOTE: For next step, make sure you have a up-to-date version of Node.js
+> NOTE: For the next step, make sure you have an up-to-date version of Node.js
 > Use `node -v` to check it, is the version >= 14?
 
 Install dependencies:
@@ -47,20 +47,24 @@ Install dependencies:
 npm install
 ```
 
+Build the static content:
 ```
 npm run build
 ```
 
 ## Deploy
 
+Change directory to `deploy/terraform`:
 ```
 cd $BASE_DIR/deploy/terraform
 ```
 
+Authenticate with OCI, it will open a browser where you can log in:
 ```
 oci session authenticate
 ```
 
+Copy the template for the terraform variables:
 ```
 cp terraform.tfvars.template terraform.tfvars
 ```
@@ -70,19 +74,30 @@ Edit the variables values:
 vim terraform.tfvars
 ```
 
+You have to modify:
+- `config_file_profile` from the `oci session` command
+- `tenancy_ocid` from your OCI tenancy
+- `compartment_ocid` the compartment you want, or root compartment (that is the `tenancy_ocid`)
+- `ssh_public_key` with your public SSH key, usually in `~/.ssh/id_rsa.pub`
+
+Initialize the terraform provider:
 ```
 terraform init
 ```
 
+Apply the infrastructure, with auto approval:
 ```
 terraform apply -auto-approve
 ```
 
+Provision with Ansible:
+- NGINX and static content for the frontend
+- Node, pm2, code and dependencies for the backend
 ```
 ansible-playbook -i generated/app.ini ../ansible/site.yaml
 ```
 
-> You will be asked a few times:
+> NOTE: You will be asked a few times:
 > `Are you sure you want to continue connecting (yes/no/[fingerprint])?`
 > Type `yes` and `[ENTER]`.
 
@@ -95,6 +110,8 @@ Copy and paste the IP on your browser.
 
 You will see:
 ![Screenshot](images/screenshot.png)
+
+Click `GET JOKE` to get a new joke from the backend.
 
 ## Clean Up
 
