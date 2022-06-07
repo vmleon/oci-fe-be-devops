@@ -28,6 +28,7 @@ resource "oci_core_subnet" "publicsubnet" {
   vcn_id            = oci_core_virtual_network.vcn.id
   display_name      = "Public Subnet"
   dns_label         = "public"
+  prohibit_public_ip_on_vnic = false
   security_list_ids = [oci_core_virtual_network.vcn.default_security_list_id, oci_core_security_list.http_security_list.id]
   route_table_id    = oci_core_virtual_network.vcn.default_route_table_id
   dhcp_options_id   = oci_core_virtual_network.vcn.default_dhcp_options_id

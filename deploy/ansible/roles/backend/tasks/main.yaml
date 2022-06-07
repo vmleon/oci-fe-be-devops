@@ -12,6 +12,14 @@
   - "index.js"
   - "package.json"
   - "package-lock.json"
+- name: Ensure wallet directory exists
+  file:
+    path: /home/opc/autonomous_wallet
+    state: directory
+- name: Copy and extract Oracle DB Wallet
+  unarchive:
+    src: "../../../../../deploy/terraform/generated/autonomous_wallet.zip"
+    dest: "/home/opc/autonomous_wallet"
 - name: Install dependencies
   command: npm install
   become: true
@@ -31,5 +39,7 @@
   command: pm2 start index.js
   become: true
   become_user: opc
+  environment:
+    TNS_ADMIN: /home/opc/autonomous_wallet
   args:
     chdir: /home/opc/backend/

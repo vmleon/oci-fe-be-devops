@@ -12,8 +12,7 @@ Deploy with Terraform and Ansible your frontend (React.js) and backend (Node.js)
 ## TODO
 
 - LB Health Checks in warning
-- Frontend and Backend on private subnets
-- Add Database
+- Backend integration with DB
 
 ## Set Up
 
@@ -66,6 +65,8 @@ Authenticate with OCI, it will open a browser where you can log in:
 oci session authenticate
 ```
 
+Input the region, and an a session name. You will use that in the `terraform.tfvars` in the next step.
+
 Copy the template for the terraform variables:
 ```
 cp terraform.tfvars.template terraform.tfvars
@@ -87,9 +88,14 @@ Initialize the terraform provider:
 terraform init
 ```
 
+Plan the infrastructre:
+```
+terraform plan -out resources.tfplan
+```
+
 Apply the infrastructure, with auto approval:
 ```
-terraform apply -auto-approve
+terraform apply -auto-approve resources.tfplan
 ```
 
 Provision with Ansible:
