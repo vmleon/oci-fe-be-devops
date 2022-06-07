@@ -2,6 +2,8 @@
 
 Deploy with Terraform and Ansible your frontend (React.js) and backend (Node.js) on OCI.
 
+![Architecture](images/oci-fe-be-devops.drawio.png)
+
 ## Requirements
 
 - Oracle Cloud Infrastructure account
@@ -115,6 +117,7 @@ Click `GET JOKE` to get a new joke from the backend.
 
 ## Clean Up
 
+Destroy all the infrastructure:
 ```
 terraform destroy -auto-approve
 ```

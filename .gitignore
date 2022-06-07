@@ -16,6 +16,10 @@ terraform.rc
 # Generated
 generated
 
+# Drawio
+*.bkp
+*.dtmp
+
 # dependencies
 node_modules
 .pnp
