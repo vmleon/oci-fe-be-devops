@@ -1,45 +1,51 @@
 ---
-- name: Install Node
-  dnf:
-    name: "@nodejs:16"
-    update_cache: yes
-- name: Copy server files
+- name: Copy app files
   copy:
     src: "../../../../../src/backend/{{ item }}"
-    dest: /home/opc/backend/
+    dest: /home/opc/pythonapp/
     owner: opc
+    group: opc
   with_items:
-  - "index.js"
-  - "package.json"
-  - "package-lock.json"
-- name: Ensure wallet directory exists
-  file:
-    path: /home/opc/autonomous_wallet
-    state: directory
-- name: Copy and extract Oracle DB Wallet
-  unarchive:
-    src: "../../../../../deploy/terraform/generated/autonomous_wallet.zip"
-    dest: "/home/opc/autonomous_wallet"
+    - "wsgi.py"
+    - "app.py"
+    - "requirements.txt"
+- name: Copy start bash script
+  copy:
+    src: app.sh
+    dest: /home/opc/pythonapp/
+    owner: opc
+    group: opc
+    mode: 0744
+- name: Upgrade pip
+  command: python3 -m pip install --upgrade pip
 - name: Install dependencies
-  command: npm install
-  become: true
-  become_user: opc
-  args:
-    chdir: /home/opc/backend/
-- name: Add firewall port
+  command: python3 -m pip install -r /home/opc/pythonapp/requirements.txt
+- name: FIXME probably not needed chown opc:opc for pythonapp and venv
+  file:
+    dest=/home/opc/pythonapp
+    owner=opc
+    group=opc
+    recurse=yes
+- name: Open firewall port
   firewalld:
     zone: public
     port: 3000/tcp
     permanent: yes
     immediate: yes
     state: enabled
-- name: Install pm2
-  command: npm install pm2 -g
-- name: Run Backend App
-  command: pm2 start index.js
-  become: true
-  become_user: opc
-  environment:
-    TNS_ADMIN: /home/opc/autonomous_wallet
-  args:
-    chdir: /home/opc/backend/
+- name: Copy app service unit
+  template:
+    src: ../files/app.service.j2
+    dest: /etc/systemd/system/app.service
+    mode: '0644'
+- name: Reload Systemd Daemon
+  systemd:
+    daemon_reload: yes
+- name: Start service App
+  systemd:
+    state: started
+    name: app
+- name: Enable service app
+  systemd:
+    name: app
+    enabled: yes

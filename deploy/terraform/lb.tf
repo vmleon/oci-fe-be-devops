@@ -62,7 +62,7 @@ resource "oci_load_balancer_backend_set" "lb_be_set_backend" {
   health_checker {
     port                = "3000"
     protocol            = "HTTP"
-    url_path            = "/joke"
+    url_path            = "/database"
   }
 
 }
@@ -81,7 +81,7 @@ resource "oci_load_balancer_load_balancer_routing_policy" "routing_policy" {
   
   rules {
     name = "routing_to_backend"
-    condition = "any(http.request.url.path ew (i '/joke'))"
+    condition = "any(http.request.url.path ew (i '/database'))"
     actions {
       name = "FORWARD_TO_BACKENDSET"
       backend_set_name = oci_load_balancer_backend_set.lb_be_set_backend.name

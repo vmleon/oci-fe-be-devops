@@ -10,16 +10,16 @@ output "lb_public_ip" {
   value = oci_core_public_ip.reserved_ip.ip_address
 }
 
-output "db_version" {
-  value = oci_database_autonomous_database.adb.db_version
-}
-
 output "high_connection_string" {
   value = oci_database_autonomous_database.adb.connection_strings[0].high
 }
 
-output "connection_urls" {
-  value = oci_database_autonomous_database.adb.connection_urls
+output "high_connection_string_profile" {
+  value = oci_database_autonomous_database.adb.connection_strings[0].profiles[0].value
+}
+
+output "autonomous_name" {
+  value = oci_database_autonomous_database.adb.db_name
 }
 
 output "autonomous_database_admin_password" {
@@ -27,7 +27,9 @@ output "autonomous_database_admin_password" {
   sensitive = true
 }
 
-output "adb_wallet_password" {
-  value = random_password.adb_wallet_password.result
-  sensitive = true
-}
+# For mTLS and Wallet connectivity consider the following code
+
+# output "adb_wallet_password" {
+#   value = random_password.adb_wallet_password.result
+#   sensitive = true
+# }

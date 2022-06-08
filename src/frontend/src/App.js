@@ -7,16 +7,16 @@ import Typography from '@mui/material/Typography';
 import './App.css';
 
 function App() {
-  const [text, setText] = useState('Loading...');
+  const [time, setTime] = useState('Loading...');
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState();
 
-  const getNewJoke = async () => {
+  const getNewTime = async () => {
     setLoading(true);
     try {
-      const response = await fetch('/joke');
+      const response = await fetch('/database');
       const body = await response.json();
-      setText(body.joke);
+      setTime(body.time);
       setError(null);
     } catch (error) {
       setError(error.message);
@@ -27,11 +27,11 @@ function App() {
 
   useEffect(() => {
     console.log('effect');
-    getNewJoke();
+    getNewTime();
   }, []);
 
-  const clickGetNewJoke = () => {
-    getNewJoke();
+  const clickGetNewTime = () => {
+    getNewTime();
   };
 
   return (
@@ -44,13 +44,13 @@ function App() {
         loadingPosition="start"
         startIcon={<CelebrationIcon />}
         variant="contained"
-        onClick={() => clickGetNewJoke()}
+        onClick={() => clickGetNewTime()}
       >
-        Get Joke
+        Get Time
       </LoadingButton>
       <Box sx={{width: '100%', maxWidth: 500, paddingTop: '1rem'}}>
         <Typography variant="body1" gutterBottom>
-          {text}
+          {time}
         </Typography>
       </Box>
       {error && <Alert severity="error">{error}</Alert>}

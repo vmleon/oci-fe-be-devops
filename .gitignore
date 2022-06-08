@@ -25,6 +25,11 @@ generated
 node_modules
 .pnp
 .pnp.js
+venv
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
 
 # testing
 coverage

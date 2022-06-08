@@ -1,6 +1,6 @@
 # OCI Frontend and Backend for DevOps
 
-Deploy with Terraform and Ansible your frontend (React.js) and backend (Node.js) on OCI.
+Deploy with Terraform and Ansible your frontend (React.js) and backend (Python Flask) on OCI.
 
 ![Architecture](images/oci-fe-be-devops.drawio.png)
 
@@ -12,7 +12,6 @@ Deploy with Terraform and Ansible your frontend (React.js) and backend (Node.js)
 ## TODO
 
 - LB Health Checks in warning
-- Backend integration with DB
 
 ## Set Up
 
@@ -88,7 +87,7 @@ Initialize the terraform provider:
 terraform init
 ```
 
-Plan the infrastructre:
+Plan the infrastructure:
 ```
 terraform plan -out resources.tfplan
 ```
@@ -98,11 +97,20 @@ Apply the infrastructure, with auto approval:
 terraform apply -auto-approve resources.tfplan
 ```
 
+Generage the graph of resources created:
+```
+terraform graph -type=plan | dot -Tpng -o generated/graph.png
+```
+
 Provision with Ansible:
 - NGINX and static content for the frontend
-- Node, pm2, code and dependencies for the backend
+- Python app as Systemd Service and database parameters
+
+
 ```
-ansible-playbook -i generated/app.ini ../ansible/site.yaml
+ansible-playbook -i generated/app.ini \
+  ../ansible/site.yaml \
+  --extra-vars "@generated/backend_params.json"
 ```
 
 > NOTE: You will be asked a few times:
@@ -119,7 +127,7 @@ Copy and paste the IP on your browser.
 You will see:
 ![Screenshot](images/screenshot.png)
 
-Click `GET JOKE` to get a new joke from the backend.
+Click `GET TIME` to get a date from the backend, that will ask the database.
 
 ## Clean Up
 

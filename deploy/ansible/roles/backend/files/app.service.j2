@@ -1,0 +1,16 @@
+[Unit]
+Description=Python App
+After=network.target
+
+[Service]
+User=opc
+WorkingDirectory=/home/opc/pythonapp
+ExecStart=/bin/bash -c /home/opc/pythonapp/app.sh
+Restart=always
+RestartSec=10s
+Environment='DB_USER={{ db_user }}'
+Environment='DB_PASSWORD={{ db_password }}'
+Environment='DB_SERVICE={{ db_service }}'
+
+[Install]
+WantedBy=multi-user.target
