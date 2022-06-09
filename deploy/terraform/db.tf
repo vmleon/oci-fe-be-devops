@@ -17,7 +17,7 @@ variable "autonomous_database_db_license" {
 
 variable "autonomous_database_db_whitelisted_ips" {
   type = list(string)
-  default = ["0.0.0.0/0"]
+  default = ["0.0.0.0/0"] # Don't do this in prod
 }
 
 variable "autonomous_database_cpu_core_count" {
@@ -37,6 +37,7 @@ resource "random_password" "autonomous_database_admin_password" {
   min_special = 3
   min_lower = 3
   min_upper = 3
+  override_special = "()-_[]{}?"
 }
 
 resource "oci_database_autonomous_database" "adb" {

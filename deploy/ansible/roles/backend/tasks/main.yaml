@@ -10,9 +10,9 @@
     - "app.py"
     - "requirements.txt"
 - name: Copy start bash script
-  copy:
-    src: app.sh
-    dest: /home/opc/pythonapp/
+  template:
+    src: ../files/app.sh.j2
+    dest: /home/opc/pythonapp/app.sh
     owner: opc
     group: opc
     mode: 0744
@@ -34,8 +34,8 @@
     immediate: yes
     state: enabled
 - name: Copy app service unit
-  template:
-    src: ../files/app.service.j2
+  copy:
+    src: ../files/app.service
     dest: /etc/systemd/system/app.service
     mode: '0644'
 - name: Reload Systemd Daemon

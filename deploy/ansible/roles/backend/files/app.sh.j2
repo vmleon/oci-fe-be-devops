@@ -1,0 +1,10 @@
+#!/bin/bash
+
+export DB_USER='{{ db_user }}'
+export DB_PASSWORD='{{ db_password }}'
+export DB_SERVICE='{{ db_service }}'
+
+/usr/bin/python3 -m gunicorn \
+  --bind 0.0.0.0:3000 \
+  -w 2 \
+  wsgi:app

@@ -9,6 +9,7 @@ DB_USER = os.environ.get('DB_USER', 'ADMIN')
 DB_PASSWORD = os.environ.get('DB_PASSWORD')
 DB_SERVICE = os.environ.get('DB_SERVICE')
 
+
 connection = oracledb.connect(
     user=DB_USER, password=DB_PASSWORD, dsn=DB_SERVICE)
 
@@ -16,6 +17,6 @@ connection = oracledb.connect(
 @app.route('/database')
 def index():
     cursor = connection.cursor()
-    cursor.execute('SELECT SYSTIMESTAMP FROM DUAL;')
-    timestamp_db = cur.fetchone()
+    cursor.execute("SELECT SYSTIMESTAMP FROM DUAL")
+    timestamp_db = cursor.fetchone()[0]
     return jsonify(time=timestamp_db)
