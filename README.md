@@ -59,12 +59,15 @@ Change directory to `deploy/terraform`:
 cd $BASE_DIR/deploy/terraform
 ```
 
-Authenticate with OCI, it will open a browser where you can log in:
-```
-oci session authenticate
-```
+> Skip this step for OCI Cloud Shell: 
+> Authenticate with OCI, it will open a browser where you can log in:
+> ```
+> oci session authenticate
+> ```
 
-Input the region, and an a session name. You will use that in the `terraform.tfvars` in the next step.
+Input the region (Frankfurt by default), and an a session name (`DEFAULT` for Cloud Shell).
+
+You will use that in the `terraform.tfvars` in the next step.
 
 Copy the template for the terraform variables:
 ```
@@ -76,11 +79,45 @@ Edit the variables values:
 vim terraform.tfvars
 ```
 
-You have to modify:
-- `config_file_profile` from the `oci session` command
-- `tenancy_ocid` from your OCI tenancy
-- `compartment_ocid` the compartment you want, or root compartment (that is the `tenancy_ocid`)
-- `ssh_public_key` with your public SSH key, usually in `~/.ssh/id_rsa.pub`
+Values for `terraform.tfvars`:
+
+### Profile
+
+`config_file_profile` is `DEFAULT` if you are using OCI Cloud Shell.
+
+But if you use `oci session authenticate` you might have specify a different value, change it in that case.
+
+### Tenancy
+
+`tenancy_ocid` value come from the account tenancy OCID, get the value with the following command:
+
+```
+echo $OCI_TENANCY
+```
+
+### Compartment
+
+For testing, you can use the root compartment, what is the tenancy OCID from the previous step.
+
+Sometimes, you want a specific compartment. To get the compartment OCID you can run a search with the following command:
+
+> Replace `NAME_TO_FIND` for the name of the compartment
+```
+oci iam compartment list \
+  --compartment-id-in-subtree true \
+  --name NAME_TO_FIND | jq .data
+```
+### SSH Public key
+
+`ssh_public_key` with your public SSH key, you can copy the result of: `cat ~/.ssh/id_rsa.pub`
+
+Do you have an SSH key pair, if not, run the following command:
+
+```
+ssh-keygen -b 2048 -t rsa
+```
+
+### Terraform
 
 Initialize the terraform provider:
 ```
@@ -94,18 +131,19 @@ terraform plan -out resources.tfplan
 
 Apply the infrastructure, with auto approval:
 ```
-terraform apply -auto-approve resources.tfplan
+terraform apply resources.tfplan
 ```
 
-Generage the graph of resources created:
+Generate the graph of resources created:
 ```
 terraform graph -type=plan | dot -Tpng -o generated/graph.png
 ```
 
+### Ansible
+
 Provision with Ansible:
 - NGINX and static content for the frontend
 - Python app as Systemd Service and database parameters
-
 
 ```
 ansible-playbook -i generated/app.ini \
