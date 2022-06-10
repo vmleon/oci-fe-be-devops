@@ -110,7 +110,10 @@ oci iam compartment list \
 
 ### SSH Public key
 
-The `ssh_public_key` is for your public SSH key, you can copy the result of: `cat ~/.ssh/id_rsa.pub`.
+The `ssh_public_key` is for your public SSH key, you can copy the result of:
+```
+cat ~/.ssh/id_rsa.pub
+```
 
 > Do you have an SSH key pair, if not, run the following command:
 > ```
