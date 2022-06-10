@@ -138,17 +138,22 @@ Apply the infrastructure, with auto approval:
 terraform apply resources.tfplan
 ```
 
-Generate the graph of resources created:
-```
-terraform graph -type=plan | dot -Tpng -o generated/graph.png
-```
+Answer by typing `yes` when terraform asks you to confirm.
+
+> Curious about what it looks like? Terraform can generate a graph.
+> 
+> Generate the graph of resources created:
+> ```
+> terraform graph
+> ```
 
 ### Ansible
 
-Provision with Ansible:
-- NGINX and static content for the frontend
-- Python app as Systemd Service and database parameters
+Ansible SSH into the machines and provision everything needed for the machines to host the applications:
+- Frontend: NGINX and static content for the frontend
+- Backend: Python app as Systemd Service and database parameters
 
+Run the Ansible Playbook:
 ```
 ansible-playbook -i generated/app.ini \
   ../ansible/site.yaml \
