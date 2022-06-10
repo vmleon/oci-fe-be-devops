@@ -65,31 +65,31 @@ cd $BASE_DIR/deploy/terraform
 > oci session authenticate
 > ```
 
-Input the region (Frankfurt by default), and an a session name (`DEFAULT` for Cloud Shell).
+Input the region (Frankfurt by default), and the session name (`DEFAULT` for Cloud Shell).
 
-You will use that in the `terraform.tfvars` in the next step.
+Terraform will read the values from a file `terraform.tfvars` that you are going to create in the next step.
 
-Copy the template for the terraform variables:
+Use terraform variables template file to create your own `terraform.tfvars`:
 ```
 cp terraform.tfvars.template terraform.tfvars
 ```
 
-Edit the variables values:
+Edit the variables values with vim or your favorite editor:
 ```
 vim terraform.tfvars
 ```
 
-Values for `terraform.tfvars`:
+The values goes in this file `terraform.tfvars` and contains: profile, tenancy, compartment and ssh key.
 
 ### Profile
 
 `config_file_profile` is `DEFAULT` if you are using OCI Cloud Shell.
 
-But if you use `oci session authenticate` you might have specify a different value, change it in that case.
+But if you use `oci session authenticate` (not for OCI Cloud Shell) you might have specify a different value, change it in that case.
 
 ### Tenancy
 
-`tenancy_ocid` value come from the account tenancy OCID, get the value with the following command:
+The `tenancy_ocid` value comes from the account tenancy OCID, get the value with the following command:
 
 ```
 echo $OCI_TENANCY
@@ -107,15 +107,16 @@ oci iam compartment list \
   --compartment-id-in-subtree true \
   --name NAME_TO_FIND | jq .data
 ```
+
 ### SSH Public key
 
-`ssh_public_key` with your public SSH key, you can copy the result of: `cat ~/.ssh/id_rsa.pub`
+The `ssh_public_key` is for your public SSH key, you can copy the result of: `cat ~/.ssh/id_rsa.pub`.
 
-Do you have an SSH key pair, if not, run the following command:
-
-```
-ssh-keygen -b 2048 -t rsa
-```
+> Do you have an SSH key pair, if not, run the following command:
+> ```
+> ssh-keygen -b 2048 -t rsa
+> ```
+> Then, you can copy the result of: `cat ~/.ssh/id_rsa.pub`
 
 ### Terraform
 
