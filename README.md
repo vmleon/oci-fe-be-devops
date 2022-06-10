@@ -83,7 +83,7 @@ The values goes in this file `terraform.tfvars` and contains: profile, tenancy, 
 
 ### Profile
 
-`config_file_profile` is `DEFAULT` if you are using OCI Cloud Shell.
+The `config_file_profile` is `DEFAULT` if you are using OCI Cloud Shell.
 
 But if you use `oci session authenticate` (not for OCI Cloud Shell) you might have specify a different value, change it in that case.
 
