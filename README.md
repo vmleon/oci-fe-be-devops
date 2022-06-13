@@ -133,7 +133,7 @@ Plan the infrastructure:
 terraform plan -out resources.tfplan
 ```
 
-Apply the infrastructure, with auto approval:
+Apply the infrastructure, based on the plan from the previous step:
 ```
 terraform apply resources.tfplan
 ```
