@@ -19,12 +19,12 @@ variable "num_instances_backend" {
 }
 
 data "oci_core_images" "ol8_images" {
-    compartment_id = var.compartment_ocid
-    shape = var.instance_shape
-    operating_system = "Oracle Linux"
-    operating_system_version = "8"
-    sort_by = "TIMECREATED"
-    sort_order = "DESC"
+  compartment_id           = var.compartment_ocid
+  shape                    = var.instance_shape
+  operating_system         = "Oracle Linux"
+  operating_system_version = "8"
+  sort_by                  = "TIMECREATED"
+  sort_order               = "DESC"
 }
 
 data "oci_identity_availability_domain" "ad" {
@@ -36,7 +36,7 @@ resource "oci_core_instance" "frontend" {
   count               = var.num_instances_webserver
   availability_domain = data.oci_identity_availability_domain.ad.name
   compartment_id      = var.compartment_ocid
-  display_name        = "frontend_${count.index}"
+  display_name        = "frontend-${random_string.deploy_id.result}_${count.index}"
   shape               = var.instance_shape
 
   metadata = {
@@ -70,7 +70,7 @@ resource "oci_core_instance" "backend" {
   count               = var.num_instances_backend
   availability_domain = data.oci_identity_availability_domain.ad.name
   compartment_id      = var.compartment_ocid
-  display_name        = "backend_${count.index}"
+  display_name        = "backend-${random_string.deploy_id.result}_${count.index}"
   shape               = var.instance_shape
 
   metadata = {

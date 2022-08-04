@@ -1,6 +1,6 @@
 variable "autonomous_database_db_name" {
-  type = string
-  default = "autonomous"
+  type    = string
+  default = "adb"
 }
 
 variable "autonomous_database_db_workload" {
@@ -16,45 +16,45 @@ variable "autonomous_database_db_license" {
 }
 
 variable "autonomous_database_db_whitelisted_ips" {
-  type = list(string)
+  type    = list(string)
   default = ["0.0.0.0/0"] # Don't do this in prod
 }
 
 variable "autonomous_database_cpu_core_count" {
-  type = number
+  type    = number
   default = 1
 }
 
 variable "autonomous_database_data_storage_size_in_tbs" {
-  type = number
+  type    = number
   default = 1
 }
 
 resource "random_password" "autonomous_database_admin_password" {
   length           = 16
   special          = true
-  min_numeric = 3
-  min_special = 3
-  min_lower = 3
-  min_upper = 3
+  min_numeric      = 3
+  min_special      = 3
+  min_lower        = 3
+  min_upper        = 3
   override_special = "()-_[]{}?"
 }
 
 resource "oci_database_autonomous_database" "adb" {
-    #Required
-    compartment_id = var.compartment_ocid
-    db_name = var.autonomous_database_db_name
+  #Required
+  compartment_id = var.compartment_ocid
+  db_name        = "${var.autonomous_database_db_name}${random_string.deploy_id.result}"
 
-    #Optional
-    admin_password = random_password.autonomous_database_admin_password.result
-    cpu_core_count = var.autonomous_database_cpu_core_count
-    data_storage_size_in_tbs = var.autonomous_database_data_storage_size_in_tbs
-    db_workload = var.autonomous_database_db_workload
-    display_name = var.autonomous_database_db_name
-    is_mtls_connection_required = false
-    whitelisted_ips = var.autonomous_database_db_whitelisted_ips
-    is_auto_scaling_enabled = true
-    license_model = var.autonomous_database_db_license
+  #Optional
+  admin_password              = random_password.autonomous_database_admin_password.result
+  cpu_core_count              = var.autonomous_database_cpu_core_count
+  data_storage_size_in_tbs    = var.autonomous_database_data_storage_size_in_tbs
+  db_workload                 = var.autonomous_database_db_workload
+  display_name                = var.autonomous_database_db_name
+  is_mtls_connection_required = false
+  whitelisted_ips             = var.autonomous_database_db_whitelisted_ips
+  is_auto_scaling_enabled     = true
+  license_model               = var.autonomous_database_db_license
 }
 
 # For mTLS and Wallet connectivity consider the following code

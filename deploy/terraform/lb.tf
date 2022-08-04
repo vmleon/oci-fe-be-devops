@@ -28,7 +28,7 @@ resource "oci_load_balancer" "lb" {
     minimum_bandwidth_in_mbps = var.load_balancer_shape_details_minimum_bandwidth_in_mbps
   }
 
-  display_name = "Load Balancer"
+  display_name = "lb-${random_string.deploy_id.result}"
   reserved_ips {
     id = oci_core_public_ip.reserved_ip.id
   }
@@ -40,18 +40,18 @@ resource "oci_load_balancer_backend_set" "lb_be_set_frontend" {
   policy           = "ROUND_ROBIN"
 
   health_checker {
-    port                = "80"
-    protocol            = "HTTP"
-    url_path            = "/"
+    port     = "80"
+    protocol = "HTTP"
+    url_path = "/"
   }
 
 }
 
 resource "oci_load_balancer_backend" "lb_be_frontend" {
-  backendset_name = oci_load_balancer_backend_set.lb_be_set_frontend.name
-  ip_address = oci_core_instance.frontend[0].public_ip
+  backendset_name  = oci_load_balancer_backend_set.lb_be_set_frontend.name
+  ip_address       = oci_core_instance.frontend[0].public_ip
   load_balancer_id = oci_load_balancer.lb.id
-  port = 80
+  port             = 80
 }
 
 resource "oci_load_balancer_backend_set" "lb_be_set_backend" {
@@ -60,39 +60,39 @@ resource "oci_load_balancer_backend_set" "lb_be_set_backend" {
   policy           = "ROUND_ROBIN"
 
   health_checker {
-    port                = "3000"
-    protocol            = "HTTP"
-    url_path            = "/database"
+    port     = "3000"
+    protocol = "HTTP"
+    url_path = "/database"
   }
 
 }
 
 resource "oci_load_balancer_backend" "lb_be_backend" {
-  backendset_name = oci_load_balancer_backend_set.lb_be_set_backend.name
-  ip_address = oci_core_instance.backend[0].public_ip
+  backendset_name  = oci_load_balancer_backend_set.lb_be_set_backend.name
+  ip_address       = oci_core_instance.backend[0].public_ip
   load_balancer_id = oci_load_balancer.lb.id
-  port = 3000
+  port             = 3000
 }
 
 resource "oci_load_balancer_load_balancer_routing_policy" "routing_policy" {
   condition_language_version = "V1"
-  load_balancer_id = oci_load_balancer.lb.id
-  name = "routing_policy"
-  
+  load_balancer_id           = oci_load_balancer.lb.id
+  name                       = "routing_policy"
+
   rules {
-    name = "routing_to_backend"
+    name      = "routing_to_backend"
     condition = "any(http.request.url.path ew (i '/database'))"
     actions {
-      name = "FORWARD_TO_BACKENDSET"
+      name             = "FORWARD_TO_BACKENDSET"
       backend_set_name = oci_load_balancer_backend_set.lb_be_set_backend.name
     }
   }
 
   rules {
-    name = "routing_to_frontend"
+    name      = "routing_to_frontend"
     condition = "any(http.request.url.path eq (i '/'))"
     actions {
-      name = "FORWARD_TO_BACKENDSET"
+      name             = "FORWARD_TO_BACKENDSET"
       backend_set_name = oci_load_balancer_backend_set.lb_be_set_frontend.name
     }
   }
